@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Лабораторні роботи 8 клас (НУШ)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f1f5f9;
+        }
+
+        .lab-card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .lab-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        .notebook-img {
+            max-width: 280px;
+            width: 100%;
+            height: auto;
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="text-slate-900">
+
+    <!-- Header -->
+    <header class="bg-white border-b border-slate-200 py-10 px-4">
+        <div class="max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+            <div class="text-center md:text-left">
+                <h1 class="text-3xl md:text-4xl font-extrabold text-slate-900 mb-2">Лабораторні роботи 8 клас (НУШ)</h1>
+                <p class="text-slate-500 text-lg">Робочий зошит та практичні завдання</p>
+            </div>
+            <div class="flex justify-center">
+                <img 
+                    src="https://images.unsplash.com/photo-1544640808-32ca72ac7f67?auto=format&fit=crop&q=80&w=400" 
+                    alt="Фото робочого зошита" 
+                    class="notebook-img"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=Робочий+зошит'"
+                >
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Grid -->
+    <main class="max-w-5xl mx-auto px-4 py-12">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+            
+            <script>
+                // Масив з назвами робіт (можна редагувати)
+                const labs = [
+                    "Вивчення теплового балансу при змішуванні води",
+                    "Визначення питомої теплоємності речовини",
+                    "Визначення питомої теплоти плавлення льоду",
+                    "Складання електричного кола та вимірювання сили струму",
+                    "Вимірювання електричної напруги за допомогою вольтметра",
+                    "Вивчення залежності сили струму від напруги",
+                    "Визначення опору провідника за допомогою амперметра і вольтметра",
+                    "Дослідження послідовного з'єднання провідників",
+                    "Дослідження паралельного з'єднання провідників",
+                    "Вимірювання потужності споживача електричного струму"
+                ];
+
+                for (let i = 1; i <= 10; i++) {
+                    document.write(`
+                        <div class="lab-card bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+                            <div class="flex items-start gap-4">
+                                <div class="bg-blue-600 text-white font-bold rounded-lg px-3 py-1 shrink-0">
+                                    №${i}
+                                </div>
+                                <div class="flex-grow">
+                                    <h3 class="font-bold text-lg mb-4 text-slate-800">Лабораторна робота №${i}</h3>
+                                    <div class="flex flex-wrap gap-3">
+                                        <a href="lab${i}/test.html" class="flex-1 text-center bg-slate-100 hover:bg-blue-600 hover:text-white text-slate-700 py-2 px-4 rounded-md text-sm font-bold transition-all border border-slate-200">
+                                            Тест
+                                        </a>
+                                        <a href="lab${i}/task.html" class="flex-1 text-center bg-slate-100 hover:bg-emerald-600 hover:text-white text-slate-700 py-2 px-4 rounded-md text-sm font-bold transition-all border border-slate-200">
+                                            Творче завдання
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    `);
+                }
+            </script>
+
+        </div>
+    </main>
+
+    <footer class="text-center py-10 border-t border-slate-200 text-slate-400 text-sm">
+        <p>GitHub Repository • Лабораторні роботи 8 клас</p>
+    </footer>
+
+</body>
+</html>
