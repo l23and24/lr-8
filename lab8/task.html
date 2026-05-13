@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Творче завдання з фізики</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        body {
+            background-color: #f8fafc;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        .step-card {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+        .step-card:active { transform: scale(0.97); }
+        .step-correct { border-color: #10b981 !important; background-color: #ecfdf5 !important; }
+        .step-wrong { border-color: #ef4444 !important; background-color: #fef2f2 !important; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in { animation: slideIn 0.3s ease forwards; }
+        .badge-number {
+            position: absolute;
+            left: -8px;
+            top: -8px;
+            width: 22px;
+            height: 22px;
+            background: #1d4ed8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans text-slate-900">
+
+    <header class="bg-slate-800 text-white p-5 shadow-lg sticky top-0 z-50">
+        <h1 class="text-lg font-bold text-center uppercase tracking-tight">Творче завдання</h1>
+    </header>
+
+    <main class="flex-grow p-4 max-w-md mx-auto w-full space-y-6">
+        
+        <!-- Умова завдання -->
+        <div class="bg-white rounded-2xl p-5 shadow-sm border border-slate-200">
+            <h3 class="text-slate-900 font-black text-[11px] uppercase mb-2 tracking-wider border-b pb-1">Умова:</h3>
+            <p class="text-xs text-slate-700 leading-relaxed">
+                Доступне обладнання: джерело постійної напруги, амперметр, відомий резистор $R_0$ та невідомий резистор $R_x$. 
+                <br><br>
+                <b>Завдання:</b> Побудуйте логічний ланцюжок для визначення опору $R_x$ без використання вольтметра.
+            </p>
+        </div>
+
+        <!-- План дій -->
+        <div class="space-y-3">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 flex justify-between items-center">
+                <span>Ваша логічна модель:</span>
+                <span id="step-count" class="bg-slate-700 text-white px-2 py-0.5 rounded-full">0 / 6</span>
+            </h2>
+            <div id="target-area" class="bg-slate-50 border-2 border-dashed border-slate-300 rounded-3xl p-4 shadow-inner min-h-[250px] flex flex-col gap-3">
+                <div id="empty-message" class="m-auto text-center py-8">
+                    <p class="text-slate-400 text-xs italic">Перетягніть кроки сюди у правильному порядку</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Варіанти -->
+        <div class="space-y-3 pb-32">
+            <h2 class="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Доступні тези:</h2>
+            <div id="options-area" class="flex flex-col gap-3"></div>
+        </div>
+    </main>
+
+    <!-- Керування -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 bg-white/95 backdrop-blur-md border-t border-slate-200 z-50 shadow-2xl">
+        <div class="max-w-md mx-auto flex gap-3">
+            <button id="reset-btn" class="flex-1 py-4 border-2 border-slate-200 rounded-2xl text-slate-500 font-bold active:bg-slate-50 text-[10px] uppercase">
+                Перетасувати
+            </button>
+            <button id="check-btn" class="flex-[2] py-4 bg-blue-700 text-white rounded-2xl font-black shadow-lg active:scale-95 text-[10px] uppercase tracking-widest">
+                Перевірити логіку
+            </button>
+        </div>
+    </div>
+
+    <!-- Модалка -->
+    <div id="modal" class="fixed inset-0 bg-slate-900/90 hidden items-center justify-center p-6 z-[100] backdrop-blur-sm">
+        <div class="bg-white rounded-3xl p-8 w-full max-w-xs text-center shadow-2xl">
+            <div id="modal-icon" class="text-6xl mb-4"></div>
+            <h3 id="modal-title" class="text-xl font-bold mb-2 text-slate-800"></h3>
+            <p id="modal-text" class="text-slate-600 text-sm mb-8 leading-relaxed"></p>
+            <button id="close-modal-btn" class="w-full bg-slate-800 text-white py-4 rounded-2xl font-bold active:opacity-80">Зрозуміло</button>
+        </div>
+    </div>
+
+    <script>
+        const stepsData = [
+            { id: 1, text: "З’єднати $R_0$ та $R_x$ паралельно, щоб напруга на них була однаковою: $U_0 = U_x$." },
+            { id: 2, text: "Виміряти амперметром струм $I_0$ у гілці з відомим резистором." },
+            { id: 3, text: "Виміряти амперметром струм $I_x$ у гілці з невідомим резистором." },
+            { id: 4, text: "За законом Ома замінити напруги добутками: $I_0 \\cdot R_0 = I_x \\cdot R_x$." },
+            { id: 5, text: "Виразити невідому величину з отриманого рівняння: $R_x = (I_0 \\cdot R_0) / I_x$." },
+            { id: 6, text: "Записати кінцевий результат вимірювань та розрахунків." },
+            { id: 101, dist: true, text: "Прирівняти сили струму, оскільки з'єднання є послідовним." },
+            { id: 102, dist: true, text: "Використати закон Джоуля-Ленца для знаходження потужності." }
+        ];
+
+        let selectedSteps = [];
+        let currentOptions = [];
+
+        function shuffle(array) {
+            const newArr = [...array];
+            for (let i = newArr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArr[i], newArr[j]] = [newArr[j], newArr[i]];
+            }
+            return newArr;
+        }
+
+        function showModal(icon, title, text) {
+            document.getElementById('modal-icon').innerText = icon;
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-text').innerText = text;
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        function render() {
+            const optionsArea = document.getElementById('options-area');
+            const targetArea = document.getElementById('target-area');
+            const emptyMsg = document.getElementById('empty-message');
+
+            optionsArea.innerHTML = '';
+            
+            // Відображаємо тільки ті варіанти, які не в "кошику"
+            const available = currentOptions.filter(opt => !selectedSteps.some(sel => sel.id === opt.id));
+            
+            available.forEach(step => {
+                optionsArea.appendChild(createCard(step, false));
+            });
+
+            // Очищуємо цільову зону, крім повідомлення про пустку
+            const existingInTarget = targetArea.querySelectorAll('.step-card');
+            existingInTarget.forEach(el => el.remove());
+
+            if (selectedSteps.length === 0) {
+                emptyMsg.style.display = 'block';
+            } else {
+                emptyMsg.style.display = 'none';
+                selectedSteps.forEach((step, idx) => {
+                    targetArea.appendChild(createCard(step, true, idx + 1));
+                });
+            }
+
+            document.getElementById('step-count').innerText = `${selectedSteps.length} / 6`;
+            if (window.MathJax) MathJax.typesetPromise();
+        }
+
+        function createCard(step, isInTarget, order) {
+            const div = document.createElement('div');
+            div.className = `step-card relative bg-white p-4 rounded-2xl border shadow-sm text-[13px] font-medium text-slate-700 leading-snug animate-in ${isInTarget ? 'border-blue-200' : 'border-slate-200'}`;
+            div.innerHTML = step.text;
+            
+            if (isInTarget) {
+                const badge = document.createElement('div');
+                badge.className = 'badge-number';
+                badge.innerText = order;
+                div.appendChild(badge);
+                div.onclick = () => {
+                    selectedSteps = selectedSteps.filter(s => s.id !== step.id);
+                    render();
+                };
+            } else {
+                div.onclick = () => {
+                    selectedSteps.push(step);
+                    render();
+                };
+            }
+            return div;
+        }
+
+        function checkLogic() {
+            const ids = selectedSteps.map(s => s.id);
+            const correctOrder = [1, 2, 3, 4, 5, 6];
+            const targetCards = document.getElementById('target-area').querySelectorAll('.step-card');
+
+            if (ids.length === 0) {
+                showModal('💡', 'План порожній', 'Побудуйте логічний ланцюжок від схеми до результату.');
+                return;
+            }
+
+            if (JSON.stringify(ids) === JSON.stringify(correctOrder)) {
+                showModal('✅', 'Блискуче!', 'Ви успішно вивели формулу та побудували логічну модель експерименту.');
+                targetCards.forEach(c => c.classList.add('step-correct'));
+            } else {
+                const hasDist = selectedSteps.some(s => s.dist);
+                if (hasDist) {
+                    showModal('❌', 'Хибний крок', 'Ви обрали твердження, яке не відповідає фізичним законам у цій ситуації.');
+                    targetCards.forEach((c, i) => { if(selectedSteps[i].dist) c.classList.add('step-wrong'); });
+                } else if (ids.length < 6) {
+                    showModal('⏳', 'Неповна відповідь', 'Вашій логіці бракує кількох кроків для завершення виведення.');
+                } else {
+                    showModal('🔄', 'Порядок кроків', 'Всі тези правильні, але логічна послідовність виведення порушена.');
+                }
+            }
+        }
+
+        function init() {
+            selectedSteps = [];
+            currentOptions = shuffle(stepsData); // Перетасовуємо масив при ініціалізації
+            
+            document.getElementById('check-btn').onclick = checkLogic;
+            document.getElementById('reset-btn').onclick = init;
+            document.getElementById('close-modal-btn').onclick = closeModal;
+            render();
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
