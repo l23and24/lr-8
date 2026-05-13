@@ -29,6 +29,7 @@
             height: auto;
             border-radius: 0.75rem;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            object-fit: cover;
         }
     </style>
 </head>
@@ -42,22 +43,23 @@
                 <p class="text-slate-500 text-lg">Робочий зошит та практичні завдання</p>
             </div>
             <div class="flex justify-center">
+                <!-- Використовуємо локальний файл, який ви перейменували в GitHub -->
                 <img 
-                    src="https://images.unsplash.com/photo-1544640808-32ca72ac7f67?auto=format&fit=crop&q=80&w=400" 
+                    src="notebook-img.jpg" 
                     alt="Фото робочого зошита" 
-                    class="notebook-img.jpg"
-                    onerror="this.src='https://via.placeholder.com/300x400?text=Робочий+зошит'"
+                    class="notebook-img"
+                    onerror="this.src='https://via.placeholder.com/300x400?text=Зображення+не+знайдено'"
                 >
             </div>
         </div>
     </header>
 
-    <!-- Main Grid -->
+    <!-- Grid of Labs -->
     <main class="max-w-5xl mx-auto px-4 py-12">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             
             <script>
-                // Масив з назвами робіт (можна редагувати)
+                // Список назв лабораторних робіт
                 const labs = [
                     "Вивчення теплового балансу при змішуванні води",
                     "Визначення питомої теплоємності речовини",
